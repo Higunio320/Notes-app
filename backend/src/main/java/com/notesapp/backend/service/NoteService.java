@@ -12,7 +12,7 @@ public interface NoteService {
 
     Note save(Note note);
 
-    void deleteById(int id);
+    Note deleteById(int id);
 
     Note update(Integer id, Note note);
 }
