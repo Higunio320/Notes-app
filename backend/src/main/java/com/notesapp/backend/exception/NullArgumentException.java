@@ -1,6 +1,6 @@
 package com.notesapp.backend.exception;
 
-public class NullArgumentException extends RuntimeException{
+public class NullArgumentException extends NoteException{
 
     public NullArgumentException(String message) {
         super(message);
