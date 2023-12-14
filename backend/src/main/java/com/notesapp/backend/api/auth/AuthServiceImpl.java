@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> findUser = userRepository.findByEmail(request.email());
 
         if(findUser.isPresent()) {
-            throw new UserAlreadyExistsException(String.format("User with email: %s already exists", request.email()));
+            throw new UserAlreadyExistsException(request.email());
         }
 
         log.info("Creating user for username: {}", request.email());
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public final AuthenticationResponse authenticate(AuthenticationRequest request) {
-        log.info("Authenticating request for username: {}", request.email());
+        log.info("Authenticating request for user: {}", request.email());
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -76,11 +76,10 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        log.info("Fetching user with username: {}", request.email());
+        log.info("Fetching user: {}", request.email());
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UserNotFoundException(
-                        String.format("User with email: %s has not been found", request.email())));
+                .orElseThrow(() -> new UserNotFoundException(request.email()));
 
         String jwtToken = jwtServiceImpl.generateToken(user);
 

@@ -13,20 +13,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.AUTH_API_MAPPING;
+import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.LOGIN_MAPPING;
+import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.REGISTER_MAPPING;
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(AUTH_API_MAPPING)
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
 
     private final AuthService authService;
     @Override
-    @PostMapping("/register")
+    @PostMapping(REGISTER_MAPPING)
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @Override
-    @PostMapping("/login")
+    @PostMapping(LOGIN_MAPPING)
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }

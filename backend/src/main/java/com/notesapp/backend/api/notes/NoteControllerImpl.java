@@ -4,7 +4,6 @@ package com.notesapp.backend.api.notes;
 import com.notesapp.backend.api.notes.data.NoteRequest;
 import com.notesapp.backend.api.notes.data.NoteResponse;
 import com.notesapp.backend.api.notes.interfaces.NoteController;
-import com.notesapp.backend.entities.note.Note;
 import com.notesapp.backend.api.notes.interfaces.NoteService;
 import com.notesapp.backend.entities.user.User;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.API_MAPPING;
+import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTES_API_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_CREATE_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_DELETE_BY_ID_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_FIND_ALL_MAPPING;
@@ -28,7 +27,7 @@ import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.N
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_UPDATE_MAPPING;
 
 @RestController
-@RequestMapping(value = API_MAPPING)
+@RequestMapping(value = NOTES_API_MAPPING)
 @RequiredArgsConstructor
 public class NoteControllerImpl implements NoteController {
 

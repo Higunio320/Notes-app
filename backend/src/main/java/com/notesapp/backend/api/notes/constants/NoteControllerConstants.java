@@ -2,7 +2,7 @@ package com.notesapp.backend.api.notes.constants;
 
 public final class NoteControllerConstants {
 
-    public static final String API_MAPPING = "/api/notes";
+    public static final String NOTES_API_MAPPING = "/api/notes";
 
     public static final String NOTE_CREATE_MAPPING = "/create";
 
