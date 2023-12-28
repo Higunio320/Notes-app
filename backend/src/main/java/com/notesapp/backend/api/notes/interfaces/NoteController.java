@@ -11,6 +11,8 @@ public interface NoteController {
 
     List<NoteResponse> findAll(User user);
 
+    List<NoteResponse> findByText(User user, String text);
+
     NoteResponse save(NoteRequest note, User user);
 
     NoteResponse deleteById(long id, User user);

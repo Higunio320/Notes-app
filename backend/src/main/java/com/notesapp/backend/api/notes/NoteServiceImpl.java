@@ -64,6 +64,19 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public List<NoteResponse> findByText(User user, String text) {
+        log.info("Getting notes for user: {} \n containing: {}", user.getEmail(), text);
+
+        List<Note> notes = noteRepository.findByUserAndNoteContaining(user, text);
+
+        log.info(RETURNING_LIST_OF_NOTES, notes.size());
+
+        return notes.stream()
+                .map(noteMapper::toNoteResponse)
+                .toList();
+    }
+
+    @Override
     public final NoteResponse save(NoteRequest note, User user) {
         log.info(CREATING_NOTE_FOR_REQUEST_AND_USER, note, user.getEmail());
 

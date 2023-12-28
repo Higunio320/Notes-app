@@ -14,5 +14,7 @@ public final class NoteControllerConstants {
 
     public static final String NOTE_DELETE_BY_ID_MAPPING = "/delete-by-id";
 
+    public static final String NOTE_GET_BY_TEXT_MAPPING = "/get-by-text";
+
     private NoteControllerConstants() {}
 }

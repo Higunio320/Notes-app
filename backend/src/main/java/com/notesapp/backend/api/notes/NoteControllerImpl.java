@@ -24,6 +24,7 @@ import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.N
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_DELETE_BY_ID_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_FIND_ALL_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_FIND_BY_ID_MAPPING;
+import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_GET_BY_TEXT_MAPPING;
 import static com.notesapp.backend.api.notes.constants.NoteControllerConstants.NOTE_UPDATE_MAPPING;
 
 @RestController
@@ -44,6 +45,13 @@ public class NoteControllerImpl implements NoteController {
     @GetMapping(NOTE_FIND_ALL_MAPPING)
     public final List<NoteResponse> findAll(@AuthenticationPrincipal User user) {
         return noteService.findAll(user);
+    }
+
+    @Override
+    @GetMapping(NOTE_GET_BY_TEXT_MAPPING)
+    public List<NoteResponse> findByText(@AuthenticationPrincipal User user,
+                                         @RequestParam String text) {
+        return noteService.findByText(user, text);
     }
 
     @Override
