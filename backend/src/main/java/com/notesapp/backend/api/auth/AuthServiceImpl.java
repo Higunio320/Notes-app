@@ -8,6 +8,7 @@ import com.notesapp.backend.config.jwt.interfaces.JwtService;
 import com.notesapp.backend.entities.user.User;
 import com.notesapp.backend.entities.user.interfaces.UserRepository;
 import com.notesapp.backend.utils.exceptions.auth.UserAlreadyExistsException;
+import com.notesapp.backend.utils.exceptions.auth.UserRegisteredWithOAuthException;
 import com.notesapp.backend.utils.exceptions.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,17 +70,21 @@ public class AuthServiceImpl implements AuthService {
     public final AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info("Authenticating request for user: {}", request.email());
 
+        log.info("Fetching user: {}", request.email());
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UserNotFoundException(request.email()));
+
+        if(user.isRegisteredWithOAuth()) {
+            throw new UserRegisteredWithOAuthException(user.getEmail());
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
-
-        log.info("Fetching user: {}", request.email());
-
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UserNotFoundException(request.email()));
 
         String jwtToken = jwtServiceImpl.generateToken(user);
 

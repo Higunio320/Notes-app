@@ -1,6 +1,7 @@
 package com.notesapp.backend.config;
 
 import com.notesapp.backend.config.jwt.JwtAuthFilter;
+import com.notesapp.backend.utils.exceptions.config.EnvironmentVariableNotSetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.notesapp.backend.config.constants.SecurityConfigConstants.ENV_FRONTEND_URL;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -43,10 +46,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        String allowedOrigin = System.getenv("FRONTEND_URL");
+        String allowedOrigin = System.getenv(ENV_FRONTEND_URL);
 
         if(allowedOrigin == null) {
-            throw new RuntimeException("FRONTEND_URL environment variable not set");
+            throw new EnvironmentVariableNotSetException(ENV_FRONTEND_URL);
         }
 
         configuration.setAllowedOrigins(List.of(allowedOrigin));
@@ -79,7 +82,8 @@ public class SecurityConfig {
                                 .userService(oAuth2UserService))
                         .authorizationEndpoint(authorization -> authorization
                                 .baseUri("/oauth2/authorize")
-                                .authorizationRequestRepository(customAuthorizationRequestRepository())))
+                                .authorizationRequestRepository(customAuthorizationRequestRepository()))
+                        .successHandler(oAuthSuccessHandler))
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
