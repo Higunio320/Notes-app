@@ -1,12 +1,14 @@
 export enum ApiUrl {
-  AUTH = '/auth',
-  OAUTH = '/oauth',
+  API = '/api',
 
-  LOGIN = `${ApiUrl.AUTH}/login`,
-  REGISTER = `${ApiUrl.AUTH}/register`,
+  AUTH = `${API}/auth`,
+  OAUTH = '/oauth2',
 
-  OAUTH_AUTHORIZE = `${ApiUrl.OAUTH}/authorize`,
+  LOGIN = `${AUTH}/login`,
+  REGISTER = `${AUTH}/register`,
 
-  OAUTH_GITHUB = `${ApiUrl.OAUTH_AUTHORIZE}/github`,
-  OAUTH_GOOGLE = `${ApiUrl.OAUTH_AUTHORIZE}/google`,
+  OAUTH_AUTHORIZE = `${OAUTH}/authorize`,
+
+  OAUTH_GITHUB = `${OAUTH_AUTHORIZE}/github`,
+  OAUTH_GOOGLE = `${OAUTH_AUTHORIZE}/google`,
 }

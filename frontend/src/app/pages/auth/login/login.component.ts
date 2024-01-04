@@ -6,7 +6,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {NgOptimizedImage} from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
+import {environment} from "../../../../environments/environment";
+import {ApiUrl} from "../../../core/enums/api-url";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-login',
@@ -20,6 +23,8 @@ import {NgOptimizedImage} from "@angular/common";
     MatButtonModule,
     MatIconModule,
     NgOptimizedImage,
+    MatProgressSpinnerModule,
+    NgIf,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -31,6 +36,7 @@ export class LoginComponent {
 
 
   hidePassword = true;
+  waitingForResponse = false;
 
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
@@ -46,11 +52,19 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(username, password).subscribe(
-      response => {
-        this.router.navigate(['/home']);
-      }
-    );
+    this.authService.login(username, password).subscribe({
+      next: () => {this.router.navigateByUrl('/home')},
+    });
+  }
+
+  authorizeWithGoogle() {
+    this.waitingForResponse = true;
+    window.location.href = `${environment.API_URL}${ApiUrl.OAUTH_GOOGLE}`;
+  }
+
+  authorizeWithGitHub() {
+    this.waitingForResponse = true;
+    window.location.href = `${environment.API_URL}${ApiUrl.OAUTH_GITHUB}`;
   }
 
 }

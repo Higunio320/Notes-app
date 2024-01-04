@@ -22,12 +22,10 @@ export class AuthService {
         next: (response) => {
           this.saveToken(response.token);
         },
-        error: (error) => {
-          console.log(error);
-        }
       })
     );
   }
+
   private saveToken(token: string) {
     this.storage.saveToken(token);
     this.authenticated = true;

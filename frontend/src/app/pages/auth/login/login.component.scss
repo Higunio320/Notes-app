@@ -1,6 +1,7 @@
 
 
 .login-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,4 +129,17 @@
 
 .oauth-button img {
   margin-right: 0.2em;
+}
+
+.spinner-container {
+  position: absolute;
+  bottom: 2em;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.spinner {
+  margin-top: 20px;
 }
