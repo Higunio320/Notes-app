@@ -30,13 +30,13 @@
         <span class="line-text">or</span>
       </div>
       <div class="button-row">
-        <button class="google-btn oauth-btn-google">
+        <button class="google-btn oauth-btn-google" (click)="authorizeWithGoogle()">
           <div class="oauth-button">
             <img ngSrc="/assets/icons/google-icon.svg" alt="Google icon" class="google-icon" height="20" width="20">
             <span class="google-text">Continue with Google</span>
           </div>
         </button>
-        <button class="google-btn oauth-button-github">
+        <button class="google-btn oauth-button-github" (click)="authorizeWithGitHub()">
           <div class="oauth-button">
             <img ngSrc="/assets/icons/github-icon.svg" alt="Github icon" class="google-icon" height="20" width="20">
             <span class="google-text">Continue with GitHub</span>
@@ -44,6 +44,9 @@
         </button>
       </div>
     </form>
+    <div class="spinner-container">
+      <mat-spinner *ngIf="waitingForResponse" [diameter]="50" class="spinner"></mat-spinner>
+    </div>
   </div>
 </div>
 

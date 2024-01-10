@@ -2,9 +2,20 @@
   <mat-toolbar color="primary">
     <span>Notes</span>
     <button mat-raised-button color="accent">New Note</button>
-    <button mat-fab color="accent" class="logout-button">
+    <button mat-fab (click)="logout()" color="accent" class="logout-button">
       <ng-icon name="matLogOut" size="2em"></ng-icon>
     </button>
   </mat-toolbar>
 
+  <mat-grid-list cols="4">
+    <mat-grid-tile *ngFor="let note of notes"
+    [colspan] = "rowspan"
+    [rowspan] = "colspan">
+<!--      <div class="note">-->
+<!--        <h1>{{note.title}}</h1>-->
+<!--        <h3>{{note.text}}</h3>-->
+<!--      </div>-->
+      <h1>Siema</h1>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>
