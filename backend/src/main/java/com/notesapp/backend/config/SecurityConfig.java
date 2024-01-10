@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.client.web.HttpSessionOAuth2Authoriza
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -44,6 +45,8 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     private final AuthenticationEntryPoint authenticationEntryPoint;
+
+    private final AuthenticationFailureHandler oAuthFailureHandler;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -88,7 +91,8 @@ public class SecurityConfig {
                         .authorizationEndpoint(authorization -> authorization
                                 .baseUri("/oauth2/authorize")
                                 .authorizationRequestRepository(customAuthorizationRequestRepository()))
-                        .successHandler(oAuthSuccessHandler))
+                        .successHandler(oAuthSuccessHandler)
+                        .failureHandler(oAuthFailureHandler))
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
