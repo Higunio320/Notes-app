@@ -28,6 +28,15 @@
   flex-direction: column;
 }
 
+.note-container {
+  margin-top: 3.5em;
+  height: 80%;
+}
+
+.note-container mat-grid-list {
+  height: 100%;
+}
+
 .note {
   width: 80%;
   height: 80%;
@@ -35,11 +44,9 @@
   border-radius: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .note-title {
-  position: absolute;
-  top: 2em;
+  position: relative;
 }

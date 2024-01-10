@@ -7,17 +7,19 @@
     </button>
   </mat-toolbar>
 
-  <mat-grid-list cols="4">
-    <mat-grid-tile *ngFor="let note of notes"
-    [colspan] = "rowspan"
-    [rowspan] = "colspan">
-      <div class="note">
-        <div class="note-title">
-          <h2>{{note.title}}</h2>
+  <div class="note-container">
+    <mat-grid-list cols="4" rowHeight="fit">
+      <mat-grid-tile *ngFor="let note of notes"
+                     [colspan] = "rowspan"
+                     [rowspan] = "colspan">
+        <div class="note">
+          <div class="note-title">
+            <h2>{{note.title}}</h2>
+          </div>
+          <h3>{{note.text}}</h3>
+          <h3>{{note.lastEdit}}</h3>
         </div>
-        <h3>{{note.text}}</h3>
-        <h3>{{note.lastEdit}}</h3>
-      </div>
-    </mat-grid-tile>
-  </mat-grid-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
 </div>
