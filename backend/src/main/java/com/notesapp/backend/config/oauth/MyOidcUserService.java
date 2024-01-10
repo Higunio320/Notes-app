@@ -1,5 +1,6 @@
 package com.notesapp.backend.config.oauth;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -9,16 +10,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MyOidcUserService extends OidcUserService {
 
+    private final OAuthUserService oAuthUserService;
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        OidcUser user =  super.loadUser(userRequest);
+        log.info("Loading OidcUser for request: {}", userRequest);
 
-        log.info("Received OidcUser");
-        user.getAttributes().forEach((k, v) -> log.info("K-V: {} - {}", k, v));
+        OidcUser user = super.loadUser(userRequest);
 
-        return user;
+        log.info("Loaded OidcUser: {}", user.getName());
+
+        return oAuthUserService.handleOAuthUser(user, userRequest);
     }
 }

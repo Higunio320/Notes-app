@@ -1,6 +1,7 @@
 package com.notesapp.backend.config;
 
 import com.notesapp.backend.config.jwt.JwtAuthFilter;
+import com.notesapp.backend.utils.exceptions.config.EnvironmentVariableNotSetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,9 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,6 +26,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.notesapp.backend.config.constants.SecurityConfigConstants.ENV_FRONTEND_URL;
 
 @Configuration
 @EnableWebSecurity
@@ -39,14 +44,18 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
 
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+
+    private final AuthenticationFailureHandler oAuthFailureHandler;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        String allowedOrigin = System.getenv("FRONTEND_URL");
+        String allowedOrigin = System.getenv(ENV_FRONTEND_URL);
 
         if(allowedOrigin == null) {
-            throw new RuntimeException("FRONTEND_URL environment variable not set");
+            throw new EnvironmentVariableNotSetException(ENV_FRONTEND_URL);
         }
 
         configuration.setAllowedOrigins(List.of(allowedOrigin));
@@ -65,6 +74,8 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers("/api/auth/**", "/oauth2/**")
@@ -79,7 +90,9 @@ public class SecurityConfig {
                                 .userService(oAuth2UserService))
                         .authorizationEndpoint(authorization -> authorization
                                 .baseUri("/oauth2/authorize")
-                                .authorizationRequestRepository(customAuthorizationRequestRepository())))
+                                .authorizationRequestRepository(customAuthorizationRequestRepository()))
+                        .successHandler(oAuthSuccessHandler)
+                        .failureHandler(oAuthFailureHandler))
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

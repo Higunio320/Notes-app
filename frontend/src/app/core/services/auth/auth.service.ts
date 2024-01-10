@@ -25,7 +25,7 @@ export class AuthService {
       })
     );
   }
-
+  
   logout() {
     this.storage.deleteToken();
   }

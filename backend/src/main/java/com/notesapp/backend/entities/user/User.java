@@ -42,6 +42,8 @@ public class User implements UserDetails {
     @ToString.Exclude
     private String password;
 
+    private boolean isRegisteredWithOAuth = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class BackendExceptionHandler {
 
+    private static final String EXCEPTION_OCCURRED = "Exception occurred with response: {}";
+
     @ExceptionHandler({BackendException.class})
     public final ResponseEntity<ExceptionResponse> handleBackendException(BackendException backendException) {
 
@@ -20,14 +22,18 @@ public class BackendExceptionHandler {
         String exceptionClassName = backendException.getClass().getSimpleName();
         LocalDateTime timeStamp = LocalDateTime.now();
 
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+        ExceptionResponse exceptionResponse = buildExceptionResponse(exceptionClassName, message, timeStamp);
+
+        log.error(EXCEPTION_OCCURRED, exceptionResponse);
+
+        return new ResponseEntity<>(exceptionResponse, status);
+    }
+
+    private ExceptionResponse buildExceptionResponse(String exceptionClassName, String message, LocalDateTime timeStamp) {
+        return ExceptionResponse.builder()
                 .exceptionName(exceptionClassName)
                 .message(message)
                 .timeStamp(timeStamp)
                 .build();
-
-        log.error("Exception occurred with response: {}", exceptionResponse);
-
-        return new ResponseEntity<>(exceptionResponse, status);
     }
 }
