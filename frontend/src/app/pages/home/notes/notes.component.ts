@@ -9,7 +9,7 @@ import {AuthService} from "../../../core/services/auth/auth.service";
 import {Note} from "../../../core/data/note/note";
 import {NoteService} from "../../../core/services/note/note.service";
 import {MatGridListModule} from "@angular/material/grid-list";
-import {NgForOf} from "@angular/common";
+import {DatePipe, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-notes',
@@ -22,7 +22,7 @@ import {NgForOf} from "@angular/common";
     MatGridListModule,
     NgForOf
   ],
-  providers: [provideIcons({matLogOut})],
+  providers: [provideIcons({matLogOut}), DatePipe],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
@@ -34,7 +34,8 @@ export class NotesComponent implements OnInit {
 
   constructor(private router: Router,
               private authService: AuthService,
-              private noteService: NoteService) {
+              private noteService: NoteService,
+              private datePipe: DatePipe) {
   }
 
   logout() {
@@ -44,8 +45,12 @@ export class NotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.noteService.getAllNotes().subscribe({
-      next: (notes) => this.notes = notes,
-      error: (error) => this.router.navigate(['auth/login'])
+      next: (notes) =>  {
+        this.notes = notes;
+        this.notes.forEach((note) => {
+          note.lastEdit = <string>this.datePipe.transform(note.lastEdit, 'dd-MM-yyyy HH:mm');
+        })},
+      error: () => this.router.navigate(['auth/login'])
     });
   }
 
