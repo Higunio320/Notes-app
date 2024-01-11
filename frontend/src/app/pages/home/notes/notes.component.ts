@@ -45,7 +45,7 @@ export class NotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.noteService.getAllNotes().subscribe({
-      next: (notes) =>  {
+      next: (notes: Note[]) =>  {
         this.notes = notes;
         this.notes.forEach((note) => {
           note.lastEdit = <string>this.datePipe.transform(note.lastEdit, 'dd-MM-yyyy HH:mm');
