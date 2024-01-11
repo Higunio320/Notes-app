@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtServiceImpl;
     private final UserDetailsService userDetailsService;
+
+    private static final List<String> AUTH_WHITELIST = List.of("/api/auth/", "/oauth/");
 
     @Override
     protected final void doFilterInternal(
@@ -35,10 +38,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String jwt;
         String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || isAuthRequest(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
+
         jwt = authHeader.substring(7);
         userEmail = jwtServiceImpl.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -58,5 +63,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isAuthRequest(String requestUri) {
+        return AUTH_WHITELIST.stream().anyMatch(requestUri::startsWith);
     }
 }

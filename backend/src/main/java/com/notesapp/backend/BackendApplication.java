@@ -33,7 +33,8 @@ public class BackendApplication {
 	}
 
 	private static final String[] sampleNotes = new String[]{"First note of user %s",
-	"Second note of user %s", "I like trains %s", "Lorem ipsum %s", "Argumentum %s bebechum"};
+			"Second note of user %s", "I like trains %s", "Lorem ipsum %s", "Argumentum %s bebechum",
+			"A reaaaaaalllyyyy looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong %s nooooooooooooooooooooooooooooooooooooooooooooooooooooooooote\n"};
 
 	private static User createUser(AuthService authService, UserRepository userRepository) {
 		RegisterRequest registerRequest = RegisterRequest.builder()
@@ -62,12 +63,14 @@ public class BackendApplication {
 	private static void createSampleNotes(User user, NoteService noteService) {
 		int count = sampleNotes.length;
 
-		for(int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++) {
 			NoteRequest noteRequest = NoteRequest.builder()
 					.title(String.format("Note no. %d", i))
 					.text(String.format(sampleNotes[i], user.getEmail()))
 					.build();
 			noteService.save(noteRequest, user);
 		}
+
+
 	}
 }
