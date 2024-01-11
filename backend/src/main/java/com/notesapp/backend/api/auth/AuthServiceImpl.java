@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,10 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtServiceImpl;
 
     private final AuthenticationManager authenticationManager;
+
+    private final JwtService jwtService;
+
+    private final UserDetailsService userDetailsService;
 
     private static final String JWT_RETURN = "Returning JWT token";
 
@@ -92,5 +98,26 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    @Override
+    public boolean checkToken(String token) {
+        log.info("Extracting username from token: {}", token);
+        String username = jwtService.extractUsername(token);
+
+
+        if(username == null) {
+            log.info("Username is null");
+            return false;
+        }
+
+        log.info("Fetching user details for username: {}", username);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        log.info("Checking if token: {} is valid", token);
+        boolean valid = jwtService.isTokenValid(token, userDetails);
+
+        log.info("Token valid: {}", valid);
+        return valid;
     }
 }

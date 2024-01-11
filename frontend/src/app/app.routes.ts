@@ -16,5 +16,5 @@ export const routes: Routes = [
       { path: '**', redirectTo: 'notes'}
     ]},
   { path: 'oauth2', component: OauthComponent},
-  { path: '**', redirectTo: 'auth'}
+  { path: '**', redirectTo: 'auth/login'}
 ];

@@ -9,4 +9,6 @@ public interface AuthService {
     AuthenticationResponse register(RegisterRequest request);
 
     AuthenticationResponse authenticate(AuthenticationRequest request);
+
+    boolean checkToken(String token);
 }

@@ -1,6 +1,10 @@
 package com.notesapp.backend.config.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notesapp.backend.config.jwt.interfaces.JwtService;
+import com.notesapp.backend.utils.exceptions.BackendExceptionHandler;
+import com.notesapp.backend.utils.exceptions.ExceptionResponse;
+import com.notesapp.backend.utils.exceptions.auth.InvalidJWTException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +34,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtServiceImpl;
     private final UserDetailsService userDetailsService;
+    private final BackendExceptionHandler backendExceptionHandler;
+    private final ObjectMapper objectMapper;
 
     private static final List<String> AUTH_WHITELIST = List.of("/api/auth/", "/oauth/");
 
@@ -37,7 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String jwt;
-        String userEmail;
+        String userEmail = null;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ") || isAuthRequest(request.getRequestURI())) {
             filterChain.doFilter(request, response);
@@ -45,7 +55,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        userEmail = jwtServiceImpl.extractUsername(jwt);
+        try {
+            userEmail = jwtServiceImpl.extractUsername(jwt);
+        } catch (InvalidJWTException e) {
+            ResponseEntity<ExceptionResponse> responseEntity = backendExceptionHandler.handleBackendException(e);
+
+            String jsonBody = objectMapper.writeValueAsString(Objects.requireNonNull(responseEntity.getBody()));
+            response.getWriter().write(jsonBody);
+            response.setContentType("/application/json");
+
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 

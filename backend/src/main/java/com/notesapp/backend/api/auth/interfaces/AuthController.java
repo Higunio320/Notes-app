@@ -12,4 +12,5 @@ public interface AuthController {
 
     ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest request);
 
+    ResponseEntity<Void> checkToken(String token);
 }

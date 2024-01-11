@@ -6,6 +6,7 @@ export enum ApiUrl {
 
   LOGIN = `${AUTH}/login`,
   REGISTER = `${AUTH}/register`,
+  CHECK_TOKEN = `${AUTH}/check-token`,
 
   OAUTH_AUTHORIZE = `${OAUTH}/authorize`,
 
