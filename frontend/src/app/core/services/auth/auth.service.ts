@@ -19,11 +19,26 @@ export class AuthService {
       tap({
         next: (response) => {
           this.saveToken(response.token);
-        },
+        }
       }),
       catchError((error : any) => {
          let errMsg = `An error occured: ${error.error.message}`;
          return throwError(() => new Error(errMsg));
+      }
+    ));
+  }
+
+  register(username: string, password: string, firstName: string, lastName: string) {
+    return this.http.post<LoginResponse>(`${environment.API_URL}${ApiUrl.REGISTER}`,
+      {email: username, password: password, firstName: firstName, lastName: lastName}).pipe(
+        tap({
+          next: response => {
+            this.saveToken(response.token);
+          }
+        }),
+      catchError((error : any) => {
+        let errMsg = `An error occurred: ${error.error.message}`;
+        return throwError(() => new Error(errMsg))
       }
     ));
   }

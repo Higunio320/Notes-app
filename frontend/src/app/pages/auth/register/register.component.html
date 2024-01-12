@@ -1,0 +1,81 @@
+<div class="background">
+  <div class="login-container">
+    <form (ngSubmit)="submitForm()" [formGroup]="registerForm">
+      <div class="login-row">
+        <h1>Notes Register</h1>
+      </div>
+      <div class="login-row">
+        <mat-form-field>
+          <mat-label>First name</mat-label>
+          <input formControlName="firstName" matInput placeholder="John" required>
+          <mat-error *ngIf="registerForm.controls.firstName.hasError('required')">
+            First name is <strong>required</strong></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Last name</mat-label>
+          <input formControlName="lastName" matInput placeholder="Doe" required>
+          <mat-error *ngIf="registerForm.controls.lastName.hasError('required')">
+            Last name is <strong>required</strong></mat-error>
+        </mat-form-field>
+      </div>
+      <div class="login-row">
+        <mat-form-field>
+          <mat-label>Enter your email</mat-label>
+          <input formControlName="username" matInput placeholder="user@example.com" required>
+          <mat-error *ngIf="registerForm.controls.username.hasError('required')">
+            Email is <strong>required</strong></mat-error>
+        </mat-form-field>
+      </div>
+      <div class="login-row">
+        <mat-form-field>
+          <mat-label>Enter your password</mat-label>
+          <input formControlName="password" matInput [type]="hide ? 'password' : 'text'">
+          <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon color="accent">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="registerForm.controls.password.hasError('required')">
+            Password is <strong>required</strong></mat-error>
+        </mat-form-field>
+      </div>
+      <div class="login-row">
+        <mat-form-field>
+          <mat-label>Repeat your password</mat-label>
+          <input formControlName="repeatPassword" matInput [type]="hideRepeat ? 'password' : 'text'">
+          <button type="button" mat-icon-button matSuffix (click)="hideRepeat = !hideRepeat" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon color="accent">{{hideRepeat ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="registerForm.controls.repeatPassword.hasError('required')">
+            Repeat password is <strong>required</strong></mat-error>
+        </mat-form-field>
+      </div>
+      <div class="login-row">
+        <button class="login-button" mat-raised-button type="submit" color="primary">Register</button>
+      </div>
+      <div class="login">
+        <p style="color: rgb(128,128,128);">Already have an account?</p>
+        <a style="color:#9c31ff; font-weight: bold;" [routerLink]="['/auth/login']">Log in</a>
+      </div>
+      <div class="line">
+        <span class="line-text">or</span>
+      </div>
+      <div class="button-row">
+        <button type="button" class="google-btn oauth-btn-google" (click)="authorizeWithGoogle()">
+          <div class="oauth-button">
+            <img ngSrc="/assets/icons/google-icon.svg" alt="Google icon" class="google-icon" height="20" width="20">
+            <span class="google-text">Continue with Google</span>
+          </div>
+        </button>
+        <button type="button" class="google-btn oauth-button-github" (click)="authorizeWithGitHub()">
+          <div class="oauth-button">
+            <img ngSrc="/assets/icons/github-icon.svg" alt="Github icon" class="google-icon" height="20" width="20">
+            <span class="google-text">Continue with GitHub</span>
+          </div>
+        </button>
+      </div>
+    </form>
+    <div class="spinner-container">
+      <mat-spinner *ngIf="waitingForResponse" [diameter]="50" class="spinner"></mat-spinner>
+    </div>
+  </div>
+</div>
+
