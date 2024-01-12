@@ -9,7 +9,9 @@ import com.notesapp.backend.entities.user.User;
 import com.notesapp.backend.entities.user.interfaces.UserRepository;
 import com.notesapp.backend.utils.exceptions.auth.UserAlreadyExistsException;
 import com.notesapp.backend.utils.exceptions.auth.UserRegisteredWithOAuthException;
+import com.notesapp.backend.utils.exceptions.auth.WrongPasswordException;
 import com.notesapp.backend.utils.exceptions.user.UserNotFoundException;
+import com.notesapp.backend.utils.validation.password.interfaces.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +40,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsService userDetailsService;
 
+    private final PasswordValidator passwordValidator;
+
     private static final String JWT_RETURN = "Returning JWT token";
+
+    private static final String WRONG_PASSWORD = "Password must contain at least 10 characters, " +
+            "max 50 characters, at least one uppercase letter, " +
+            "one lowercase letter, one number and one special character from set: " +
+            "!@#$%^&*()_+-=[]{};':\"\\|,.<>/? and have at least 3.3 entropy";
 
     @Override
     public final AuthenticationResponse register(RegisterRequest request) {
@@ -47,6 +56,11 @@ public class AuthServiceImpl implements AuthService {
 
         if(findUser.isPresent()) {
             throw new UserAlreadyExistsException(request.email());
+        }
+
+        log.info("Validating password");
+        if(!passwordValidator.isValid(request.password())) {
+            throw new WrongPasswordException(WRONG_PASSWORD);
         }
 
         log.info("Creating user for username: {}", request.email());

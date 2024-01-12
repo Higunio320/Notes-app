@@ -36,12 +36,14 @@ public class BackendApplication {
 			"Second note of user %s", "I like trains %s", "Lorem ipsum %s", "Argumentum %s bebechum",
 			"A reaaaaaalllyyyy looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong %s nooooooooooooooooooooooooooooooooooooooooooooooooooooooooote\n"};
 
+	private static final String CORRECT_PASSWORD = "Abc123456!";
+
 	private static User createUser(AuthService authService, UserRepository userRepository) {
 		RegisterRequest registerRequest = RegisterRequest.builder()
 				.email("user123@mail.pl")
 				.firstName("User")
 				.lastName("Userowski")
-				.password("user123")
+				.password(CORRECT_PASSWORD)
 				.build();
 
 		authService.register(registerRequest);
@@ -54,7 +56,7 @@ public class BackendApplication {
 				.email("2user123@mail.pl")
 				.firstName("Szymonek")
 				.lastName("Bolec")
-				.password("2user123")
+				.password(CORRECT_PASSWORD)
 				.build();
 
 		return userRepository.save(user);

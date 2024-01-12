@@ -5,6 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +22,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_EMAIL_MAX_SIZE;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_EMAIL_NULL;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_EMAIL_REGEX;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_EMAIL_SIZE_MSG;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_EMAIL_WRONG;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_FIRST_NAME_BLANK;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_FIRST_NAME_MAX_SIZE;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_FIRST_NAME_SIZE_MSG;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_LAST_NAME_BLANK;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_LAST_NAME_MAX_SIZE;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_LAST_NAME_SIZE_MSG;
+import static com.notesapp.backend.entities.user.constants.UserConstants.USER_PASSWORD_NULL;
 
 @Entity
 @AllArgsConstructor
@@ -33,13 +50,21 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = USER_FIRST_NAME_BLANK)
+    @Size(max = USER_FIRST_NAME_MAX_SIZE, message = USER_FIRST_NAME_SIZE_MSG)
     private String firstName;
 
+    @NotBlank(message = USER_LAST_NAME_BLANK)
+    @Size(max = USER_LAST_NAME_MAX_SIZE, message = USER_LAST_NAME_SIZE_MSG)
     private String lastName;
 
+    @Email(message = USER_EMAIL_WRONG, regexp=USER_EMAIL_REGEX)
+    @NotNull(message = USER_EMAIL_NULL)
+    @Size(max = USER_EMAIL_MAX_SIZE, message = USER_EMAIL_SIZE_MSG)
     private String email;
 
     @ToString.Exclude
+    @NotNull(message = USER_PASSWORD_NULL)
     private String password;
 
     private boolean isRegisteredWithOAuth = false;

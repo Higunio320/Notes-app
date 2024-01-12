@@ -31,6 +31,7 @@ public class OAuthUserBuilderImpl implements OAuthUserBuilder {
                 .firstName(name)
                 .lastName(lastName)
                 .isRegisteredWithOAuth(true)
+                .password("")
                 .build();
     }
 }
