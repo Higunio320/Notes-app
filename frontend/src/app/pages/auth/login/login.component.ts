@@ -10,6 +10,7 @@ import {NgIf, NgOptimizedImage} from "@angular/common";
 import {environment} from "../../../../environments/environment";
 import {ApiUrl} from "../../../core/enums/api-url";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-login',
@@ -32,19 +33,22 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 export class LoginComponent {
 
   constructor(private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private snackBar: MatSnackBar) { }
 
 
   hidePassword = true;
   waitingForResponse = false;
+  errorMessage = '';
 
   loginForm = new FormGroup({
-    username: new FormControl('', Validators.required),
+    username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', Validators.required),
   });
 
 
   submitForm() {
+    this.errorMessage = '';
     const username = this.loginForm.get('username')!.value;
     const password = this.loginForm.get('password')!.value;
 
@@ -54,6 +58,8 @@ export class LoginComponent {
 
     this.authService.login(username, password).subscribe({
       next: () => {this.router.navigateByUrl('/home')},
+      error: (error) => {
+        this.snackBar.open(error.message, 'Close', {duration: 3000})}
     });
   }
 

@@ -4,7 +4,7 @@ import {StorageService} from "../storage/storage.service";
 import {LoginResponse} from "../../data/auth/login-response";
 import {environment} from "../../../../environments/environment";
 import {ApiUrl} from "../../enums/api-url";
-import {catchError, map, Observable, of, tap} from "rxjs";
+import {catchError, map, Observable, of, tap, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,12 @@ export class AuthService {
         next: (response) => {
           this.saveToken(response.token);
         },
-      })
-    );
+      }),
+      catchError((error : any) => {
+         let errMsg = `An error occured: ${error.error.message}`;
+         return throwError(() => new Error(errMsg));
+      }
+    ));
   }
 
   logout() {
