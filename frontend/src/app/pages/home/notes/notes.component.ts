@@ -10,6 +10,8 @@ import {Note} from "../../../core/data/note/note";
 import {NoteService} from "../../../core/services/note/note.service";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {DatePipe, NgForOf} from "@angular/common";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-notes',
@@ -20,7 +22,9 @@ import {DatePipe, NgForOf} from "@angular/common";
     MatButtonModule,
     NgIconComponent,
     MatGridListModule,
-    NgForOf
+    NgForOf,
+    MatInputModule,
+    FormsModule
   ],
   providers: [provideIcons({matLogOut}), DatePipe],
   templateUrl: './notes.component.html',
@@ -31,11 +35,23 @@ export class NotesComponent implements OnInit {
   rowspan = 1;
   colspan = 1;
   notes : Note[] = [];
+  noteText = '';
 
   constructor(private router: Router,
               private authService: AuthService,
               private noteService: NoteService,
               private datePipe: DatePipe) {
+  }
+
+  search() {
+    this.noteService.findByText(this.noteText).subscribe({
+      next: (notes: Note[]) => {
+        this.notes = notes;
+        this.notes.forEach((note) => {
+          note.lastEdit = <string>this.datePipe.transform(note.lastEdit, 'dd-MM-yyyy HH:mm');
+        });
+      }
+    })
   }
 
   logout() {

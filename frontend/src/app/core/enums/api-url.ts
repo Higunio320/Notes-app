@@ -16,4 +16,6 @@ export enum ApiUrl {
   NOTES = `${API}/notes`,
 
   FIND_ALL_NOTES = `${NOTES}/find-all`,
+
+  FIND_BY_TEXT = `${NOTES}/get-by-text`,
 }

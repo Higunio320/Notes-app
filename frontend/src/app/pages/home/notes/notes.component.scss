@@ -85,3 +85,14 @@
   cursor: pointer;
   background-color: rgba(248, 214, 138, 0.7)
 }
+
+.searchBar {
+  display: flex;
+  margin-top: 5em;
+  width: 100%;
+  justify-content: center;
+}
+
+.searchBar button {
+  margin-left: 1em;
+}
