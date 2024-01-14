@@ -8,6 +8,7 @@ import {NgIf} from "@angular/common";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NoteService} from "../../../core/services/note/note.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-note-edit',
@@ -18,7 +19,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatInputModule,
     NgIf,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    MatIconModule
   ],
   templateUrl: './note-edit.component.html',
   styleUrl: './note-edit.component.scss'
@@ -62,6 +64,13 @@ export class NoteEditComponent implements OnInit {
       next: () => this.router.navigate(['home/notes/list']),
       error: (error) => this.snackBar.open(error.message, 'Close')
     });
+  }
+
+  deleteNote() {
+    this.noteService.deleteNote(this.note.id).subscribe({
+      next: () => this.router.navigate(['home/notes/list']),
+      error: (error) => this.snackBar.open(error.message, 'Close')
+    })
   }
 
 }

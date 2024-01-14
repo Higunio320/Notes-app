@@ -26,7 +26,6 @@ export class NoteService {
   createNote(title: string, text: string) {
     let noteRequest: NoteRequest = {title: title, text: text};
     return this.http.post<Note>(`${environment.API_URL}${ApiUrl.CREATE_NOTE}`, noteRequest).pipe(
-      tap(),
       catchError((error: any) => {
         let errMsg = `An error occurred while creating note: ${error.error.message}`;
         return throwError(() => new Error(errMsg))
@@ -37,12 +36,20 @@ export class NoteService {
   updateNote(id: number, title: string, text: string) {
     let noteRequest: NoteRequest = {title: title, text: text};
     return this.http.put<Note>(`${environment.API_URL}${ApiUrl.UPDATE_NOTE}`, noteRequest, {params: {id: id}}).pipe(
-      tap(),
       catchError((error: any) => {
         let errMsg = `An error occurred while updating note: ${error.error.message}`;
         return throwError(() => new Error(errMsg))
       })
     );
-}
+  }
+
+  deleteNote(id: number) {
+    return this.http.delete(`${environment.API_URL}${ApiUrl.DELETE_NOTE}`, {params: {id: id}}).pipe(
+      catchError((error: any) => {
+        let errMsg = `An error occurred while deleting note: ${error.error.message}`;
+        return throwError(() => new Error(errMsg))
+      })
+    )
+  }
 
 }

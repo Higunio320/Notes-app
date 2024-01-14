@@ -47,8 +47,8 @@
 }
 
 .note-title {
+  flex: 0 0 auto;
   font-weight: bold;
-  height: 15%;
   width: 80%;
   text-align: center;
   white-space: nowrap;
@@ -56,22 +56,24 @@
   text-overflow: ellipsis;
 }
 
+
 .note-text {
+  flex: 1 1 auto;
   display: flex;
   text-align: center;
   word-break: break-word;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-height: 70%;
+  max-height: calc(80% - 4em);
 }
 
 .note-date {
   position: absolute;
-  bottom: 3em;
+  bottom: 2.5em;
   text-align: center;
   overflow: hidden;
   max-width: 80%;
-  height: 12%;
+  height: 3em;
 }
 
 .line {
