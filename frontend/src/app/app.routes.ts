@@ -6,6 +6,7 @@ import {authGuard} from "./core/guards/auth.guard";
 import {RegisterComponent} from "./pages/auth/register/register.component";
 import {NotesListComponent} from "./pages/home/notes-list/notes-list.component";
 import {NoteAddComponent} from "./pages/home/note-add/note-add.component";
+import {NoteEditComponent} from "./pages/home/note-edit/note-edit.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
@@ -21,6 +22,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: NotesListComponent},
           { path: 'add', component: NoteAddComponent},
+          { path: 'edit', component: NoteEditComponent},
           { path: '**', redirectTo: 'list'}
         ]},
       { path: '**', redirectTo: 'notes'}

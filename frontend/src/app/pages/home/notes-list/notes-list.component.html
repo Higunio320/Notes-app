@@ -13,7 +13,7 @@
     <mat-grid-list cols="4" rowHeight="fit">
       <mat-grid-tile *ngFor="let note of notes"
                      [colspan] = "rowspan"
-                     [rowspan] = "colspan">
+                     [rowspan] = "colspan" (click)="onNoteClick(note)">
         <div class="note">
           <div class="note-title">
             <h2>{{note.title}}</h2>

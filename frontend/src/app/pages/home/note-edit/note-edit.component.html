@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>Update note</h1>
+  <form (ngSubmit)="updateNote()" [formGroup] = noteGroup>
+    <mat-form-field class="title-field">
+      <mat-label>Title</mat-label>
+      <input formControlName="title" matInput placeholder="Title of your note">
+      <mat-error *ngIf="noteGroup.controls['title'].hasError('required')">
+        Title is <strong>required</strong></mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="text-field">
+      <mat-label>Text</mat-label>
+      <textarea formControlName="text" rows="10" cols="20" matInput placeholder="Content of your note"></textarea>
+      <mat-error *ngIf="noteGroup.controls['text'].hasError('required')">
+        Text is <strong>required</strong></mat-error>
+    </mat-form-field>
+
+    <div class="button-row">
+      <button type="button" [routerLink]="['/home']" mat-raised-button color="accent">Back to home</button>
+      <button mat-raised-button color="primary">Update</button>
+    </div>
+  </form>
+</div>

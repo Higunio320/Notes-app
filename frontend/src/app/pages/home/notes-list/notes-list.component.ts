@@ -84,4 +84,7 @@ export class NotesListComponent implements OnInit{
     }
   }
 
+  onNoteClick(note: Note) {
+    this.router.navigate(['home/notes/edit'], {state: {note: note}});
+  }
 }

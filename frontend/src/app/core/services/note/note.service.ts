@@ -32,6 +32,17 @@ export class NoteService {
         return throwError(() => new Error(errMsg))
       })
     );
+  }
+
+  updateNote(id: number, title: string, text: string) {
+    let noteRequest: NoteRequest = {title: title, text: text};
+    return this.http.put<Note>(`${environment.API_URL}${ApiUrl.UPDATE_NOTE}`, noteRequest, {params: {id: id}}).pipe(
+      tap(),
+      catchError((error: any) => {
+        let errMsg = `An error occurred while updating note: ${error.error.message}`;
+        return throwError(() => new Error(errMsg))
+      })
+    );
 }
 
 }

@@ -17,5 +17,6 @@ export enum ApiUrl {
 
   FIND_ALL_NOTES = `${NOTES}/find-all`,
   FIND_BY_TEXT = `${NOTES}/get-by-text`,
-  CREATE_NOTE = `${NOTES}/create`
+  CREATE_NOTE = `${NOTES}/create`,
+  UPDATE_NOTE = `${NOTES}/update`
 }
