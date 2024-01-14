@@ -52,10 +52,7 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    let token = this.storage.getToken();
-    if(token) {
-      let params = new HttpParams().set('token', token);
-      return this.http.get(`${environment.API_URL}${ApiUrl.CHECK_TOKEN}`, {params, observe: 'response'}).pipe(
+      return this.http.get(`${environment.API_URL}${ApiUrl.CHECK_TOKEN}`, {observe: 'response'}).pipe(
         map(response => {
           if(response.status === 200) {
             return true;
@@ -69,8 +66,5 @@ export class AuthService {
           return of(false);
         })
       );
-    } else {
-      return of(false);
-    }
   }
 }

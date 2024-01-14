@@ -1,12 +1,13 @@
 export enum ApiUrl {
   API = '/api',
+  OAUTH = '/oauth2',
 
   AUTH = `${API}/auth`,
-  OAUTH = '/oauth2',
+  TOKEN = `${API}/tokens`,
 
   LOGIN = `${AUTH}/login`,
   REGISTER = `${AUTH}/register`,
-  CHECK_TOKEN = `${AUTH}/check-token`,
+  CHECK_TOKEN = `${TOKEN}/check-token`,
 
   OAUTH_AUTHORIZE = `${OAUTH}/authorize`,
 

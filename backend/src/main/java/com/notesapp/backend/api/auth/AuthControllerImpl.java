@@ -38,14 +38,4 @@ public class AuthControllerImpl implements AuthController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
-    @Override
-    @GetMapping(CHECK_TOKEN_MAPPING)
-    public ResponseEntity<Void> checkToken(@RequestParam String token) {
-        if(authService.checkToken(token)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
 }
