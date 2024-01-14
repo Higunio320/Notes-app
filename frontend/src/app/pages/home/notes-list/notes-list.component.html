@@ -2,9 +2,9 @@
   <div class="searchBar">
     <mat-form-field>
       <mat-label>Search</mat-label>
-      <input [(ngModel)]="noteText" matInput placeholder="e.g. Harry Potter">
+      <input [(ngModel)]="noteText" matInput placeholder="e.g. Shopping list">
     </mat-form-field>
-    <button (click)="search()" mat-fab color="primary">
+    <button (click)="pageNumber = 0; search()" mat-fab color="primary">
       <mat-icon>search</mat-icon>
     </button>
   </div>

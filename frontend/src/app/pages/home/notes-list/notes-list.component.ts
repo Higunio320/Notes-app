@@ -47,6 +47,10 @@ export class NotesListComponent implements OnInit{
 
 
   search() {
+    if(!this.noteText) {
+      this.ngOnInit();
+      return;
+    }
     this.noteService.findByText(this.noteText, this.pageNumber).subscribe({
       next: (notes: NoteList) => {
         this.notes = notes.notes;
