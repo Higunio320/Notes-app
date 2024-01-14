@@ -1,0 +1,10 @@
+<div class="background">
+  <mat-toolbar color="primary">
+    <span>Notes</span>
+    <button mat-raised-button [routerLink]="['/home/notes/add']" color="accent">New Note</button>
+    <button mat-fab (click)="logout()" color="accent" class="logout-button">
+      <ng-icon name="matLogOut" size="2em"></ng-icon>
+    </button>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>

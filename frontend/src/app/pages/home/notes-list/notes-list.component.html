@@ -1,21 +1,13 @@
-<div class="background">
-  <mat-toolbar color="primary">
-    <span>Notes</span>
-    <button mat-raised-button color="accent">New Note</button>
-    <button mat-fab (click)="logout()" color="accent" class="logout-button">
-      <ng-icon name="matLogOut" size="2em"></ng-icon>
+<div class="container">
+  <div class="searchBar">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input [(ngModel)]="noteText" matInput placeholder="e.g. Harry Potter">
+    </mat-form-field>
+    <button (click)="search()" mat-fab color="primary">
+      <mat-icon>search</mat-icon>
     </button>
-  </mat-toolbar>
-
-  <<div class="searchBar">
-  <mat-form-field style="width: 30em;">
-    <mat-label>Search</mat-label>
-    <input [(ngModel)]="noteText" matInput placeholder="e.g. Harry Potter">
-  </mat-form-field>
-  <button (click)="search()" mat-fab color="primary">
-    <mat-icon>search</mat-icon>
-  </button>
-</div>
+  </div>
 
   <div class="note-container">
     <mat-grid-list cols="4" rowHeight="fit">
@@ -37,4 +29,11 @@
       </mat-grid-tile>
     </mat-grid-list>
   </div>
+
+  <mat-paginator [length]="totalNotes"
+                 [pageSize]="8"
+                 [pageSizeOptions]="[8]"
+                 [pageIndex]="pageNumber"
+                 (page)="onPageChange($event)"
+  ></mat-paginator>
 </div>
