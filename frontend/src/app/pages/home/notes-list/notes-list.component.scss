@@ -54,6 +54,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: 767px) {
+    font-size: 0.8em;
+  }
 }
 
 
@@ -65,15 +69,24 @@
   text-overflow: ellipsis;
   overflow: hidden;
   max-height: calc(80% - 4em);
+
+  @media (max-width: 767px) {
+    font-size: 0.8em;
+    max-height: calc(50% - 2em);
+  }
 }
 
 .note-date {
   position: absolute;
-  bottom: 2.5em;
+  bottom: calc(10% + 1em);
   text-align: center;
   overflow: hidden;
   max-width: 80%;
   height: 3em;
+
+  @media (max-width: 767px) {
+    font-size: 0.8em;
+  }
 }
 
 .line {

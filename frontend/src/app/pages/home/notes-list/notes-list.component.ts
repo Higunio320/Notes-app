@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {MatGridListModule} from "@angular/material/grid-list";
-import {DatePipe, NgForOf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
@@ -24,7 +24,8 @@ import {NoteList} from "../../../core/data/note/note-list";
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgIf
   ],
   templateUrl: './notes-list.component.html',
   styleUrl: './notes-list.component.scss'
@@ -34,7 +35,7 @@ export class NotesListComponent implements OnInit{
   constructor(
     private router: Router,
     private noteService: NoteService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   rowspan = 1;
@@ -63,12 +64,17 @@ export class NotesListComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.loadNotes();
+    this.adjustGrid(window.innerWidth);
+  }
+
+  loadNotes() {
     this.noteService.getAllNotes(this.pageNumber).subscribe({
       next: (notes: NoteList) => {
         this.notes = notes.notes;
         this.notes.forEach((note) => {
-            note.lastEdit = <string>this.datePipe.transform(note.lastEdit, 'dd-MM-yyyy HH:mm');
-          });
+          note.lastEdit = <string>this.datePipe.transform(note.lastEdit, 'dd-MM-yyyy HH:mm');
+        });
         this.totalNotes = notes.totalNotes;
       },
       error: () => this.router.navigate(['auth/login'])
@@ -86,5 +92,18 @@ export class NotesListComponent implements OnInit{
 
   onNoteClick(note: Note) {
     this.router.navigate(['home/notes/edit'], {state: {note: note}});
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event : any) {
+    this.adjustGrid(event.target.innerWidth);
+  }
+
+  adjustGrid(width: number) {
+    if (width < 768) {
+      this.colspan = 2;
+    } else {
+      this.colspan = 1;
+    }
   }
 }
