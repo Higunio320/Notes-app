@@ -22,10 +22,27 @@
   min-width: 30em;
   max-width: 30em;
   gap: 10px;
+
+  @media (max-width: 768px) {
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.login-form {
+
+  @media (max-width: 768px) {
+    max-width: 80%;
+  }
 }
 
 .login-row mat-form-field{
   width: 30em;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .login-row h1 {

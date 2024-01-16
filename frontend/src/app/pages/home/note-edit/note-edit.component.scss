@@ -14,6 +14,11 @@
   font-weight: bold;
   font-size: 4em;
   color: #ffffff;
+
+  @media(max-width: 768px) {
+    font-size: 2em;
+    margin-top: 3em;
+  }
 }
 
 form {
@@ -27,11 +32,19 @@ form {
 .title-field {
   width: 40em;
   margin-bottom: 3em;
+
+  @media(max-width:768px) {
+    width: 80%;
+  }
 }
 
 .text-field {
   max-height: 30em;
   width: 40em;
+
+  @media(max-width: 768px) {
+    width: 80%;
+  }
 }
 
 mat-form-field.text-field textarea {
@@ -50,6 +63,10 @@ mat-form-field.text-field textarea {
   margin-right: 1em;
   width: 10em;
   height: 3em;
+
+  @media(max-width: 768px) {
+    width: 100%;
+  }
 }
 
 mat-hint {
