@@ -6,15 +6,13 @@
   align-items: center;
   height: 100%;
   width: 100%;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 }
+
 
 .login-row {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: row;
   min-width: 30em;
   max-width: 30em;
@@ -27,19 +25,13 @@
 
 }
 
-.login-form {
-
-  @media (max-width: 768px) {
-    max-width: 80%;
-  }
-}
-
 .login-row mat-form-field{
   width: 30em;
 
   @media (max-width: 768px) {
     width: 100%;
   }
+
 }
 
 .login-row h1 {
@@ -48,6 +40,8 @@
   font-weight: bold;
   color: white;
   margin-bottom: 1.5em;
+
+
 }
 
 .login-button {
@@ -109,6 +103,7 @@
   transition: background-color 0.3s ease;
   margin-right: 1em;
   margin-left: 1em;
+  margin-bottom: 1em;
 }
 
 .oauth-btn-google {

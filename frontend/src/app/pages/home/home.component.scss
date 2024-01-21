@@ -1,14 +1,25 @@
+.background {
+  height: 100vh;
+  width: 100vw;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  background: #2f2e2e;
+  min-height: 894px;
+}
+
 .background mat-toolbar {
-  position: absolute;
   top: 0;
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  min-width: 340px;
 }
 
 .background mat-toolbar button:nth-child(2) {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
 }
 
 .background mat-toolbar span {
@@ -21,14 +32,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-router-outlet {
-}
-
-.background {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
 }
