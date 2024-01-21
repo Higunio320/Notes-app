@@ -1,0 +1,25 @@
+<div class="container">
+  <h1>Create note</h1>
+  <form (ngSubmit)="createNote()" [formGroup] = noteGroup>
+    <mat-form-field class="title-field">
+      <mat-label>Title</mat-label>
+      <input #title formControlName="title" maxlength="50" matInput placeholder="Title of your note">
+      <mat-hint align="end">{{title.value.length}} / 50</mat-hint>
+      <mat-error *ngIf="noteGroup.controls['title'].hasError('required')">
+        Title is <strong>required</strong></mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="text-field">
+      <mat-label>Text</mat-label>
+      <textarea #text formControlName="text" rows="10" cols="20" maxlength="1000" matInput placeholder="Content of your note"></textarea>
+      <mat-hint align="end">{{text.value.length}} / 1000</mat-hint>
+      <mat-error *ngIf="noteGroup.controls['text'].hasError('required')">
+        Text is <strong>required</strong></mat-error>
+    </mat-form-field>
+
+    <div class="button-row">
+      <button type="button" [routerLink]="['/home']" mat-raised-button color="accent">Back to home</button>
+      <button mat-raised-button color="primary">Create</button>
+    </div>
+  </form>
+</div>

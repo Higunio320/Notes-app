@@ -8,12 +8,15 @@ import com.notesapp.backend.api.auth.interfaces.AuthController;
 import com.notesapp.backend.api.auth.interfaces.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.AUTH_API_MAPPING;
+import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.CHECK_TOKEN_MAPPING;
 import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.LOGIN_MAPPING;
 import static com.notesapp.backend.api.auth.constants.AuthControllerConstants.REGISTER_MAPPING;
 
@@ -34,4 +37,5 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
+
 }

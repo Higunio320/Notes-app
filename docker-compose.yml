@@ -24,11 +24,27 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
     networks:
       - mynetwork
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/notes
+      FRONTEND_URL: http://localhost:4200
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    networks:
+      - mynetwork
+    depends_on:
+      - backend
 
 networks:
   mynetwork:

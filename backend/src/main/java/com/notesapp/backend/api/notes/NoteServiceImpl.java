@@ -1,5 +1,6 @@
 package com.notesapp.backend.api.notes;
 
+import com.notesapp.backend.api.notes.data.NoteListResponse;
 import com.notesapp.backend.api.notes.data.NoteRequest;
 import com.notesapp.backend.api.notes.data.NoteResponse;
 import com.notesapp.backend.api.notes.interfaces.NoteService;
@@ -11,6 +12,9 @@ import com.notesapp.backend.utils.exceptions.auth.NoAccessException;
 import com.notesapp.backend.utils.exceptions.note.NoteNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,10 +32,11 @@ public class NoteServiceImpl implements NoteService {
     private static final String CHECKING_ACCESS_TO_NOTE = "Checking if user: {} has access to note of id: {}";
     private static final String RETURNING_NOTE_RESPONSE_OF = "Returning note response of note: {}";
     private static final String GETTING_NOTES_FOR_USER = "Getting notes for user: {}";
-    private static final String RETURNING_LIST_OF_NOTES = "Returning list of note responses of size: {}";
+    private static final String RETURNING_LIST_OF_NOTES = "Returning note list response of size: {}, total notes: {}";
     private static final String CREATING_NOTE_FOR_REQUEST_AND_USER = "Creating note for request: {} and user: {}";
     private static final String SAVING_NOTE = "Saving note: {}";
     private static final String DELETING_NOTE = "Deleting note: {}";
+    private static final int PAGE_SIZE = 8;
 
     @Override
     public final NoteResponse findById(long id, User user) {
@@ -50,30 +55,46 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public final List<NoteResponse> findAll(User user) {
+    public final NoteListResponse findAll(int pageNumber, User user) {
         log.info(GETTING_NOTES_FOR_USER, user.getEmail());
 
-        List<Note> notes = noteRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        Page<Note> notes = noteRepository.findByUserOrderByLastEditDesc(user, pageable);
 
-        log.info(RETURNING_LIST_OF_NOTES, notes.size());
+        long totalNotes = notes.getTotalElements();
 
+        log.info(RETURNING_LIST_OF_NOTES, notes.getNumberOfElements(), totalNotes);
 
-        return notes.stream()
+        List<NoteResponse> notesList = notes.stream()
                 .map(noteMapper::toNoteResponse)
                 .toList();
+
+
+        return NoteListResponse.builder()
+                .notes(notesList)
+                .totalNotes(totalNotes)
+                .build();
     }
 
     @Override
-    public List<NoteResponse> findByText(User user, String text) {
+    public final NoteListResponse findByText(User user, String text, int pageNumber) {
         log.info("Getting notes for user: {} \n containing: {}", user.getEmail(), text);
 
-        List<Note> notes = noteRepository.findByUserAndNoteContaining(user, text);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+        Page<Note> notes = noteRepository.findByUserAndNoteContaining(user, text, pageable);
 
-        log.info(RETURNING_LIST_OF_NOTES, notes.size());
+        long totalNotes = notes.getTotalElements();
 
-        return notes.stream()
+        log.info(RETURNING_LIST_OF_NOTES, notes.getNumberOfElements(), totalNotes);
+
+        List<NoteResponse> notesList = notes.stream()
                 .map(noteMapper::toNoteResponse)
                 .toList();
+
+        return NoteListResponse.builder()
+                .notes(notesList)
+                .totalNotes(totalNotes)
+                .build();
     }
 
     @Override

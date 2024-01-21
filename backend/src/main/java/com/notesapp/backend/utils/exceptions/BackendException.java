@@ -17,6 +17,10 @@ public class BackendException extends RuntimeException {
         super(message);
     }
 
+    public BackendException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public BackendException(String message, HttpStatus status) {
         super(message);
         this.status = status;

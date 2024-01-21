@@ -1,6 +1,7 @@
 package com.notesapp.backend.api.notes;
 
 
+import com.notesapp.backend.api.notes.data.NoteListResponse;
 import com.notesapp.backend.api.notes.data.NoteRequest;
 import com.notesapp.backend.api.notes.data.NoteResponse;
 import com.notesapp.backend.api.notes.interfaces.NoteController;
@@ -43,15 +44,17 @@ public class NoteControllerImpl implements NoteController {
 
     @Override
     @GetMapping(NOTE_FIND_ALL_MAPPING)
-    public final List<NoteResponse> findAll(@AuthenticationPrincipal User user) {
-        return noteService.findAll(user);
+    public final NoteListResponse findAll(@AuthenticationPrincipal User user,
+                                                @RequestParam int pageNumber) {
+        return noteService.findAll(pageNumber, user);
     }
 
     @Override
     @GetMapping(NOTE_GET_BY_TEXT_MAPPING)
-    public List<NoteResponse> findByText(@AuthenticationPrincipal User user,
-                                         @RequestParam String text) {
-        return noteService.findByText(user, text);
+    public NoteListResponse findByText(@AuthenticationPrincipal User user,
+                                         @RequestParam String text,
+                                         @RequestParam int pageNumber) {
+        return noteService.findByText(user, text, pageNumber);
     }
 
     @Override

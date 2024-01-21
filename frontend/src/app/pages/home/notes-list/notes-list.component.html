@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="searchBar">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input [(ngModel)]="noteText" matInput placeholder="e.g. Shopping list">
+    </mat-form-field>
+    <button (click)="pageNumber = 0; search()" mat-fab color="primary">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  <div class="note-container">
+    <mat-grid-list cols="4" rowHeight="fit">
+      <mat-grid-tile *ngFor="let note of notes"
+                     [colspan] = "colspan"
+                     [rowspan] = "rowspan" (click)="onNoteClick(note)">
+        <div class="note">
+          <div class="note-title">
+            <h2>{{note.title}}</h2>
+          </div>
+          <div class="line"></div>
+          <div class="note-text">
+            <h3>{{note.text}}</h3>
+          </div>
+          <div class="note-date">
+            <h3>{{note.lastEdit}}</h3>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <mat-paginator [length]="totalNotes"
+                 [pageSize]="8"
+                 [pageSizeOptions]="[8]"
+                 [pageIndex]="pageNumber"
+                 (page)="onPageChange($event)"
+  ></mat-paginator>
+</div>
