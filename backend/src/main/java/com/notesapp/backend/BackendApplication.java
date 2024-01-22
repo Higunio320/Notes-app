@@ -25,7 +25,7 @@ public class BackendApplication {
 											  NoteService noteService) {
 		return args -> {
 			User user = createUser(authService, userRepository);
-			User secondUser = createSecondUser(userRepository);
+			User secondUser = createSecondUser(authService, userRepository);
 
 			createSampleNotes(user, noteService);
 			createSampleNotes(secondUser, noteService);
@@ -51,15 +51,17 @@ public class BackendApplication {
 		return userRepository.findByEmail(registerRequest.email()).orElseThrow();
 	}
 
-	private static User createSecondUser(UserRepository userRepository) {
-		User user = User.builder()
+	private static User createSecondUser(AuthService authService, UserRepository userRepository) {
+		RegisterRequest registerRequest = RegisterRequest.builder()
 				.email("2user123@mail.pl")
 				.firstName("Szymonek")
 				.lastName("Bolec")
 				.password(CORRECT_PASSWORD)
 				.build();
 
-		return userRepository.save(user);
+		authService.register(registerRequest);
+
+		return userRepository.findByEmail(registerRequest.email()).orElseThrow();
 	}
 
 	private static void createSampleNotes(User user, NoteService noteService) {
