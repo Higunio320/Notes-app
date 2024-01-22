@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,11 @@ public class JwtServiceImpl implements JwtService {
 
     public final String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
+    }
+
+    @Override
+    public final Instant extractExpirationDate(String token) {
+        return extractClaim(token, Claims::getExpiration).toInstant();
     }
 
     public final boolean isTokenValid(String token, UserDetails userDetails) {
@@ -78,10 +84,10 @@ public class JwtServiceImpl implements JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e) {
-            throw new InvalidJWTException("Token has expired", e);
-        } catch (MalformedJwtException | UnsupportedJwtException | SignatureException | IllegalArgumentException e) {
-            throw new InvalidJWTException("Token is invalid", e);
+        } catch (ExpiredJwtException ignored) {
+            throw new InvalidJWTException("Token has expired");
+        } catch (MalformedJwtException | UnsupportedJwtException | SignatureException | IllegalArgumentException ignored) {
+            throw new InvalidJWTException("Token is invalid");
         }
     }
 

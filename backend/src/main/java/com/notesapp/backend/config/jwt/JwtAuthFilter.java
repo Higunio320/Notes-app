@@ -2,6 +2,8 @@ package com.notesapp.backend.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.notesapp.backend.config.jwt.interfaces.JwtService;
+import com.notesapp.backend.entities.invalidtoken.interfaces.InvalidTokenRepository;
+import com.notesapp.backend.utils.exceptions.BackendException;
 import com.notesapp.backend.utils.exceptions.BackendExceptionHandler;
 import com.notesapp.backend.utils.exceptions.ExceptionResponse;
 import com.notesapp.backend.utils.exceptions.auth.InvalidJWTException;
@@ -35,6 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtServiceImpl;
     private final UserDetailsService userDetailsService;
     private final BackendExceptionHandler backendExceptionHandler;
+    private final InvalidTokenRepository invalidTokenRepository;
     private final ObjectMapper objectMapper;
 
     private static final List<String> AUTH_WHITELIST = List.of("/api/auth/", "/oauth/");
@@ -55,16 +58,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
+
+        if(invalidTokenRepository.existsByToken(jwt)) {
+            writeExceptionToResponse(response, new InvalidJWTException("Token is expired"));
+
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
             userEmail = jwtServiceImpl.extractUsername(jwt);
         } catch (InvalidJWTException e) {
-            ResponseEntity<ExceptionResponse> responseEntity = backendExceptionHandler.handleBackendException(e);
-
-            String jsonBody = objectMapper.writeValueAsString(Objects.requireNonNull(responseEntity.getBody()));
-            response.getWriter().write(jsonBody);
-            response.setContentType("/application/json");
-
-            filterChain.doFilter(request, response);
+            writeExceptionToResponse(response, e);
             return;
         }
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -88,5 +92,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private boolean isAuthRequest(String requestUri) {
         return AUTH_WHITELIST.stream().anyMatch(requestUri::startsWith);
+    }
+
+    private void writeExceptionToResponse(HttpServletResponse response, BackendException exception) throws  IOException {
+        ResponseEntity<ExceptionResponse> responseEntity = backendExceptionHandler.handleBackendException(exception);
+
+        String jsonBody = objectMapper.writeValueAsString(Objects.requireNonNull(responseEntity.getBody()));
+        response.getWriter().write(jsonBody);
+        response.setContentType("/application/json");
     }
 }

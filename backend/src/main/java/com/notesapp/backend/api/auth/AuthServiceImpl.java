@@ -5,8 +5,11 @@ import com.notesapp.backend.api.auth.data.AuthenticationResponse;
 import com.notesapp.backend.api.auth.data.RegisterRequest;
 import com.notesapp.backend.api.auth.interfaces.AuthService;
 import com.notesapp.backend.config.jwt.interfaces.JwtService;
+import com.notesapp.backend.entities.invalidtoken.InvalidToken;
+import com.notesapp.backend.entities.invalidtoken.interfaces.InvalidTokenRepository;
 import com.notesapp.backend.entities.user.User;
 import com.notesapp.backend.entities.user.interfaces.UserRepository;
+import com.notesapp.backend.utils.exceptions.auth.InvalidJWTException;
 import com.notesapp.backend.utils.exceptions.auth.UserAlreadyExistsException;
 import com.notesapp.backend.utils.exceptions.auth.UserRegisteredWithOAuthException;
 import com.notesapp.backend.utils.exceptions.auth.WrongPasswordException;
@@ -21,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -41,6 +45,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
 
     private final PasswordValidator passwordValidator;
+
+    private final InvalidTokenRepository invalidTokenRepository;
 
     private static final String JWT_RETURN = "Returning JWT token";
 
@@ -112,5 +118,27 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    @Override
+    public final void logout(String token) {
+        if(invalidTokenRepository.existsByToken(token)) {
+            log.info("Token already used");
+            throw new InvalidJWTException("Token is expired");
+        }
+
+        log.info("Getting username and expiration date from token to log out: {}", token);
+
+        String username = jwtService.extractUsername(token);
+        Instant expirationDate = jwtService.extractExpirationDate(token);
+
+        log.info("Logging out user: {}", username);
+
+        InvalidToken invalidToken = InvalidToken.builder()
+                .token(token)
+                .expirationDate(expirationDate)
+                .build();
+
+        invalidTokenRepository.save(invalidToken);
     }
 }

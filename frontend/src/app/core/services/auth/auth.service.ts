@@ -44,6 +44,8 @@ export class AuthService {
   }
 
   logout() {
+    this.http.post(`${environment.API_URL}${ApiUrl.LOGOUT}`,
+      {token: this.storage.getToken()}).subscribe();
     this.storage.deleteToken();
   }
 

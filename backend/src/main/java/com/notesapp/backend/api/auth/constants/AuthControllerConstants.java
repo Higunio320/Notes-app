@@ -8,6 +8,8 @@ public final class AuthControllerConstants {
 
     public static final String LOGIN_MAPPING = "/login";
 
+    public static final String LOGOUT_MAPPING = "/logout";
+
     public static final String CHECK_TOKEN_MAPPING = "/check-token";
     private AuthControllerConstants() {}
 }
